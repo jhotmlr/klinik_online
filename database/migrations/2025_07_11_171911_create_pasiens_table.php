@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('pasiens', function (Blueprint $table) {
@@ -18,13 +15,12 @@ return new class extends Migration
             $table->string('no_hp');
             $table->text('alamat');
             $table->string('keluhan');
+            $table->date('tanggal_daftar');
+            $table->date('tanggal_pemeriksaan');
             $table->timestamps();
         });
     }
-    
-    /**
-     * Reverse the migrations.
-     */
+
     public function down(): void
     {
         Schema::dropIfExists('pasiens');

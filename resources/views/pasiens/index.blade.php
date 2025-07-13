@@ -24,6 +24,8 @@
                 <th>No HP</th>
                 <th>Alamat</th>
                 <th>Keluhan</th>
+                <th>Tanggal Daftar</th>
+                <th>Tanggal Pemeriksaan</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -36,6 +38,8 @@
                 <td>{{ $pasien->no_hp }}</td>
                 <td>{{ $pasien->alamat }}</td>
                 <td>{{ $pasien->keluhan }}</td>
+                <td>{{ \Carbon\Carbon::parse($pasien->tanggal_daftar)->format('d-m-Y') }}</td>
+                <td>{{ \Carbon\Carbon::parse($pasien->tanggal_pemeriksaan)->format('d-m-Y') }}</td>
                 <td>
                     <a href="{{ route('pasiens.show', $pasien->id) }}" class="btn btn-info btn-sm">Lihat</a>
                     <a href="{{ route('pasiens.edit', $pasien->id) }}" class="btn btn-warning btn-sm">Edit</a>
@@ -46,7 +50,7 @@
                 </td>
             </tr>
         @empty
-            <tr><td colspan="7" class="text-center">Data tidak ditemukan.</td></tr>
+            <tr><td colspan="9" class="text-center">Data tidak ditemukan.</td></tr>
         @endforelse
         </tbody>
     </table>

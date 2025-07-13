@@ -43,6 +43,16 @@
             <textarea name="keluhan" class="form-control" required>{{ $pasien->keluhan }}</textarea>
         </div>
 
+        <div class="form-group">
+            <label>Tanggal Daftar:</label>
+            <input type="date" name="tanggal_daftar" class="form-control" value="{{ $pasien->tanggal_daftar }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>Tanggal Pemeriksaan:</label>
+            <input type="date" name="tanggal_pemeriksaan" class="form-control" value="{{ $pasien->tanggal_pemeriksaan }}" required>
+        </div>
+
         <br>
         <button type="submit" class="btn btn-primary">Update</button>
         <a href="{{ route('pasiens.index') }}" class="btn btn-secondary">Kembali</a>

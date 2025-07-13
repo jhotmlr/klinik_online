@@ -11,6 +11,8 @@
             <p><strong>No HP:</strong> {{ $pasien->no_hp }}</p>
             <p><strong>Alamat:</strong> {{ $pasien->alamat }}</p>
             <p><strong>Keluhan:</strong> {{ $pasien->keluhan }}</p>
+            <p><strong>Tanggal Daftar:</strong> {{ \Carbon\Carbon::parse($pasien->tanggal_daftar)->format('d M Y') }}</p>
+            <p><strong>Tanggal Pemeriksaan:</strong> {{ \Carbon\Carbon::parse($pasien->tanggal_pemeriksaan)->format('d M Y') }}</p>
             <p><strong>Dibuat:</strong> {{ $pasien->created_at->format('d M Y, H:i') }}</p>
         </div>
     </div>

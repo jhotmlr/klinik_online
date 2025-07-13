@@ -32,22 +32,15 @@
             <label>Keluhan</label>
             <textarea name="keluhan" class="form-control" required></textarea>
         </div>
+        <div class="form-group">
+            <label>Tanggal Daftar</label>
+            <input type="date" name="tanggal_daftar" class="form-control" required>
+        </div>
+        <!-- Tanggal pemeriksaan otomatis satu hari setelah tanggal daftar -->
+
         <br>
         <button type="submit" class="btn btn-primary">Simpan</button>
         <a href="{{ route('pasiens.index') }}" class="btn btn-secondary">Kembali</a>
     </form>
 </div>
-
-<script>
-    document.getElementById('formPasien').addEventListener('submit', function (e) {
-        const nama = document.querySelector('input[name="nama"]').value.trim();
-        const email = document.querySelector('input[name="email"]').value.trim();
-        const no_hp = document.querySelector('input[name="no_hp"]').value.trim();
-
-        if (!nama || !email || !no_hp) {
-            alert('Semua data wajib diisi!');
-            e.preventDefault();
-        }
-    });
-</script>
 @endsection

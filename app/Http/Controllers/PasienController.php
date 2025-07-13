@@ -4,18 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Pasien;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class PasienController extends Controller
 {
     public function index(Request $request)
     {
-        $keyword = $request->input('keyword');
-        $pasiens = Pasien::when($keyword, function ($query, $keyword) {
-            return $query->where('nama', 'like', "%$keyword%")
-                         ->orWhere('email', 'like', "%$keyword%");
-        })->get();
+        $keyword = $request->keyword;
+        $pasiens = Pasien::where('nama', 'like', "%$keyword%")
+                    ->orWhere('email', 'like', "%$keyword%")
+                    ->latest()
+                    ->paginate(10);
 
-        return view('pasiens.index', compact('pasiens', 'keyword'));
+        return view('pasiens.index', compact('pasiens'));
     }
 
     public function create()
@@ -26,63 +27,75 @@ class PasienController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama'    => 'required|string|max:255',
-            'email'   => 'required|email|unique:pasiens,email,' . ($pasien->id ?? ''),
-            'no_hp'   => 'required|string|max:20',
-            'alamat'  => 'required|string',
-            'keluhan' => 'required|string',
-        ], [
-            'nama.required'    => 'Nama wajib diisi.',
-            'email.required'   => 'Email wajib diisi.',
-            'email.email'      => 'Format email tidak valid.',
-            'email.unique'     => 'Email sudah terdaftar.',
-            'no_hp.required'   => 'Nomor HP wajib diisi.',
-            'alamat.required'  => 'Alamat wajib diisi.',
-            'keluhan.required' => 'Keluhan wajib diisi.',
+            'nama' => 'required',
+            'email' => 'required|email',
+            'no_hp' => 'required',
+            'alamat' => 'required',
+            'keluhan' => 'required',
+            'tanggal_daftar' => 'required|date',
         ]);
-        
 
-        Pasien::create($request->all());
+        $tanggalDaftar = $request->tanggal_daftar;
+        $tanggalPemeriksaan = Carbon::parse($tanggalDaftar)->addDay()->toDateString();
+
+        Pasien::create([
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'no_hp' => $request->no_hp,
+            'alamat' => $request->alamat,
+            'keluhan' => $request->keluhan,
+            'tanggal_daftar' => $tanggalDaftar,
+            'tanggal_pemeriksaan' => $tanggalPemeriksaan,
+        ]);
 
         return redirect()->route('pasiens.index')->with('success', 'Data pasien berhasil ditambahkan.');
     }
 
-    public function show(Pasien $pasien)
+    public function show($id)
     {
+        $pasien = Pasien::findOrFail($id);
         return view('pasiens.show', compact('pasien'));
     }
 
-    public function edit(Pasien $pasien)
+    public function edit($id)
     {
+        $pasien = Pasien::findOrFail($id);
         return view('pasiens.edit', compact('pasien'));
     }
 
-    public function update(Request $request, Pasien $pasien)
+    public function update(Request $request, $id)
     {
         $request->validate([
-            'nama'    => 'required|string|max:255',
-            'email'   => 'required|email|unique:pasiens,email,' . ($pasien->id ?? ''),
-            'no_hp'   => 'required|string|max:20',
-            'alamat'  => 'required|string',
-            'keluhan' => 'required|string',
-        ], [
-            'nama.required'    => 'Nama wajib diisi.',
-            'email.required'   => 'Email wajib diisi.',
-            'email.email'      => 'Format email tidak valid.',
-            'email.unique'     => 'Email sudah terdaftar.',
-            'no_hp.required'   => 'Nomor HP wajib diisi.',
-            'alamat.required'  => 'Alamat wajib diisi.',
-            'keluhan.required' => 'Keluhan wajib diisi.',
+            'nama' => 'required',
+            'email' => 'required|email',
+            'no_hp' => 'required',
+            'alamat' => 'required',
+            'keluhan' => 'required',
+            'tanggal_daftar' => 'required|date',
         ]);
-        
-        $pasien->update($request->all());
+
+        $tanggalDaftar = $request->tanggal_daftar;
+        $tanggalPemeriksaan = Carbon::parse($tanggalDaftar)->addDay()->toDateString();
+
+        $pasien = Pasien::findOrFail($id);
+        $pasien->update([
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'no_hp' => $request->no_hp,
+            'alamat' => $request->alamat,
+            'keluhan' => $request->keluhan,
+            'tanggal_daftar' => $tanggalDaftar,
+            'tanggal_pemeriksaan' => $tanggalPemeriksaan,
+        ]);
 
         return redirect()->route('pasiens.index')->with('success', 'Data pasien berhasil diperbarui.');
     }
 
-    public function destroy(Pasien $pasien)
+    public function destroy($id)
     {
+        $pasien = Pasien::findOrFail($id);
         $pasien->delete();
+
         return redirect()->route('pasiens.index')->with('success', 'Data pasien berhasil dihapus.');
     }
 }
